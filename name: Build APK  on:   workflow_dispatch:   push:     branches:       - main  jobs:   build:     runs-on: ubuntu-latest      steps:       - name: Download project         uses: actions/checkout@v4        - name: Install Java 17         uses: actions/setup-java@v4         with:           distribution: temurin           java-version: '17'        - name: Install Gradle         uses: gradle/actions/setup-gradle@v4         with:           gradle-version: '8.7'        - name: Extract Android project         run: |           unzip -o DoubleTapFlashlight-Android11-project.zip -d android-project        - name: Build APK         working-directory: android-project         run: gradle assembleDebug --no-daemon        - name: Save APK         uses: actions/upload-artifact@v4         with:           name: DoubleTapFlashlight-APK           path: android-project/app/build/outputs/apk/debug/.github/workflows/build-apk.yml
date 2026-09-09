@@ -22,8 +22,6 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '8.7'
 
       - name: Extract Android project
         run: |
@@ -35,15 +33,15 @@ jobs:
         run: |
           PROJECT_DIR=$(dirname "$(find android-project -name settings.gradle -o -name settings.gradle.kts | head -n 1)")
           echo "PROJECT_DIR=$PROJECT_DIR" >> $GITHUB_ENV
-          echo "Android project found at: $PROJECT_DIR"
 
       - name: Build APK
         run: |
           cd "$PROJECT_DIR"
-          gradle assembleDebug --no-daemon
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: DoubleTapFlashlight-APK
+          name: APK
           path: '**/app/build/outputs/apk/debug/app-debug.apk'
